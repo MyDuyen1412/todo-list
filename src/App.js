@@ -1,15 +1,17 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import Content from './pages/Content';
-
+import Content from "./pages/Content";
+import AppProvider from "./providers/AppProvider.js";
 
 function App() {
   return (
-      <BrowserRouter>
+    <BrowserRouter>
+      <AppProvider>
         <Switch>
-          <Route exact path="/" component={Content} />     
+          <Route exact path="/" component={Content} />
         </Switch>
-      </BrowserRouter>
+      </AppProvider>
+    </BrowserRouter>
   );
 }
 
