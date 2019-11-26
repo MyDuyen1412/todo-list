@@ -14,10 +14,13 @@ function Add() {
   const handleClickOutside = event => {
     if (searchBox.current && !searchBox.current.contains(event.target)) {
       setExpand(false);
+      // handleSubmit(event)
     }
     if (event.keyCode === 27) {
       setExpand(false);
+      // handleSubmit(event)
     }
+    
   };
 
   useEffect(() => {

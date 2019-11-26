@@ -33,7 +33,12 @@ function ListTodo() {
     }
     else setOpen(false)
   }, [id, todos]);
-  console.log(itemselected)
+  
+  const handleClose = () => {
+    setOpen(false)
+    history.push('/')
+  }
+
   return (
     <>
       <ListGrid colWidth="300px">
@@ -52,6 +57,7 @@ function ListTodo() {
       <ItemSelected
         item={itemselected}
         className={classnames(styles.modal, { [styles.open]: open })}
+        close={handleClose}
       />
     </>
   );
