@@ -1,7 +1,7 @@
 import classnames from "classnames";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import Context from "../../context/Context.js";
-import { addTodo, getTodoList } from "../../utils/datasource.js";
+import { getTodoList } from "../../utils/datasource.js";
 import styles from "./styles.module.css";
 
 function Add() {
@@ -35,28 +35,21 @@ function Add() {
     }
   }, [expand]);
 
-  // useEffect(() => {
-  //   getTodoList().then(res => {
-  //     setTodos(res);
-  //   });
-  // }, []);
-
   const handleSubmit = async event => {
     event.preventDefault();
-    const title = titleRef.current.value;
-    const content = contentRef.current.value;
-    const todos = getTodoList();
+    const title = titleRef.current.innerText;
+    const content = contentRef.current.innerText;
+    const todos = Object.values(getTodoList());
     const newItem = {
       title: title || null,
       content: content,
       id: todos.length > 0 ? todos[todos.length - 1].id + 1 : 0
     };
-
-    const todosNew = await addTodo(todos, newItem);
+    const todosNew = { [newItem.id]: newItem, ...getTodoList() };
     localStorage.setItem("todoList", JSON.stringify(todosNew));
     context.setTodos(todosNew);
-    contentRef.current.value = "";
-    titleRef.current.value = "";
+    contentRef.current.innerText = "";
+    titleRef.current.innerText = "";
     setExpand(false);
   };
 
@@ -74,13 +67,20 @@ function Add() {
         })}
       >
         <form name="todo" id="todo" onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Tiêu đề"
+          <div
             className={styles.title}
+            id="title"
             ref={titleRef}
-          />
-          <input type="text" placeholder="Tạo ghi chú..." ref={contentRef} />
+            contentEditable="true"
+            data-placeholder="Tiêu đề"
+          ></div>
+          <div
+            className={styles.content}
+            id="content"
+            ref={contentRef}
+            contentEditable="true"
+            data-placeholder="Tạo ghi chú..."
+          ></div>
           <div className={styles.btnSubmit}>
             <button type="submit">Đóng</button>
           </div>
