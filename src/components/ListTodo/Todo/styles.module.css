@@ -3,6 +3,14 @@
   border-radius: 8px;
   padding: 12px 16px;
   cursor: pointer;
+  /* transform: translateX(0); */
+  /* opacity: 1;
+  transition: all 0.3s ease-in-out; */
+}
+
+.hide {
+  /* transform: translateX(100px); */
+  opacity: 0;
 }
 
 .item:hover {

@@ -1,19 +1,27 @@
-import React, {useRef} from "react";
+import classnames from "classnames";
+import React, { useRef } from "react";
 import styles from "./styles.module.css";
 
-const Todo = ({ item, open, handleDelete }) => {
+const Todo = ({ item, open, handleDelete, hide }) => {
   const ref = useRef();
+  const itemRef = useRef()
   const handleOpen = (e, item) => {
     if (!ref.current.contains(e.target)) {
-      open(item)
+      open(item);
     }
-  }
+  };
   return (
-    <div className={styles.item} onClick={(e) => handleOpen(e,item)}>
+    <div
+      className={classnames(styles.item, { [styles.hide]: hide })}
+      onClick={e => handleOpen(e, item)}
+      ref={itemRef}
+    >
       <p>{item.title}</p>
       <p>{item.content}</p>
       <div className={styles.btnDelete}>
-        <button onClick={() => handleDelete(item.id)} ref={ref}>Xoá</button>
+        <button onClick={() => handleDelete(item.id)} ref={ref}>
+          Xoá
+        </button>
       </div>
     </div>
   );

@@ -38,7 +38,7 @@ function Add() {
     }
   }, [expand]);
 
-  const handleSubmit = async event => {
+  const handleSubmit = event => {
     event.preventDefault();
     const title = titleRef.current.innerText;
     const content = contentRef.current.innerText;
