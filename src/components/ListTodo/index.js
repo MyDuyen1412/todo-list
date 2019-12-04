@@ -1,7 +1,8 @@
 import _ from "lodash";
-import React, { useContext} from "react";
+import React, { useContext } from "react";
 import Context from "../../context/Context.js";
 import { useHistory } from "react-router-dom";
+import { setTodoList } from "../../utils/datasource.js";
 import Todo from "./Todo";
 import {
   CSSGrid,
@@ -12,7 +13,7 @@ import {
 } from "react-stonecutter";
 
 function ListTodo() {
-  const { todos, setTodos, itemSelected} = useContext(Context);
+  const { todos, setTodos, itemSelected } = useContext(Context);
   const history = useHistory();
 
   const { enter, entered, exit } = enterExitStyle.foldUp;
@@ -23,15 +24,13 @@ function ListTodo() {
   });
 
   const handleDelete = id => {
-    localStorage.setItem("todoList", JSON.stringify(_.omit(todos, id)));
+    setTodoList(_.omit(todos, id));
+    // localStorage.setItem("todoList", JSON.stringify(_.omit(todos, id)));
     setTodos(_.omit(todos, id));
   };
 
   const openItem = item => {
-    history.push({
-      pathname: `/item/${item.id}`,
-      state: { item: item }
-    });
+    history.push(`/item/${item.id}`);
   };
   return (
     <>
@@ -55,7 +54,7 @@ function ListTodo() {
                 item={item}
                 open={openItem}
                 handleDelete={handleDelete}
-                hide={itemSelected && (item.id === itemSelected.id)}
+                hide={itemSelected && item.id === itemSelected.id}
               />
             </div>
           ))}

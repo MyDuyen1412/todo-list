@@ -7,18 +7,35 @@ import React, {
   useCallback
 } from "react";
 import Context from "../../../context/Context.js";
+import { setTodoList } from "../../../utils/datasource.js";
 import "./styles.css";
 
-const ItemSelected = ({ location, history }) => {
-  const { item } = location.state;
+const ItemSelected = ({ history, match }) => {
+  const { id } = match.params;
   const titleRef = useRef();
   const contentRef = useRef();
-  const { todos, setTodos, position, setItemSelected } = useContext(Context);
+  const {
+    todos,
+    setTodos,
+    position,
+    setItemSelected,
+    itemSelected
+  } = useContext(Context);
   const [openDelay, setOpenDelay] = useState(false);
+  const [hide, setHide] = useState(false);
+
+  useEffect(() => {
+    setItemSelected(todos[parseInt(id)]);
+  }, [id, setItemSelected, todos]);
 
   const close = useCallback(() => {
-    history.push("/");
-    setItemSelected();
+    // history.push("/");
+    setOpenDelay(false);
+    setHide(true);
+    setTimeout(() => {
+      history.push("/");
+      setItemSelected();
+    }, 300);
   }, [history, setItemSelected]);
 
   const handleClose = useCallback(
@@ -36,10 +53,6 @@ const ItemSelected = ({ location, history }) => {
   }, []);
 
   useEffect(() => {
-    setItemSelected(item);
-  }, [item, setItemSelected]);
-
-  useEffect(() => {
     document.addEventListener("keydown", handleClose);
     return () => {
       document.removeEventListener("keydown", handleClose);
@@ -47,19 +60,21 @@ const ItemSelected = ({ location, history }) => {
   });
 
   useEffect(() => {
-    document.querySelector(
-      `.itemSelected__container .itemSelected__item`
-    ).style.transform = `translate(calc(${position.x}px - 100% - 100px), calc(${position.y}px - 100px))`;
-    document.querySelector(
-      `.itemSelected__container .itemSelected__item`
-    ).style.width = `${position.width}px`;
-    document.querySelector(
-      `.itemSelected__container .itemSelected__item`
-    ).style.height = `${position.height}px`;
-  }, [position]);
+    if (itemSelected) {
+      document.querySelector(
+        `.itemSelected__container .itemSelected__item`
+      ).style.transform = `translate(calc(${position.x}px - 100% - 118px), calc(${position.y}px - 100px))`;
+      document.querySelector(
+        `.itemSelected__container .itemSelected__item`
+      ).style.width = `${position.width}px`;
+      document.querySelector(
+        `.itemSelected__container .itemSelected__item`
+      ).style.height = `${position.height}px`;
+    }
+  }, [itemSelected, position]);
 
   useEffect(() => {
-    if (item) {
+    if (itemSelected) {
       var range = document.createRange();
       var sel = window.getSelection();
       range.setStart(contentRef.current, 1);
@@ -67,23 +82,28 @@ const ItemSelected = ({ location, history }) => {
       sel.addRange(range);
       contentRef.current.focus();
     }
-  }, [item]);
+  });
 
   const handleSubmit = event => {
     event.preventDefault();
     const title = titleRef.current.innerText;
     const content = contentRef.current.innerText;
-    todos[item.id].title = title || null;
-    todos[item.id].content = content;
-    localStorage.setItem("todoList", JSON.stringify(todos));
+    todos[itemSelected.id].title = title || null;
+    todos[itemSelected.id].content = content;
+    // localStorage.setItem("todoList", JSON.stringify(todos));
+    setTodoList(todos);
     setTodos(todos);
     close();
   };
+
+  if (!itemSelected) return null;
+
   return (
     <div
       id="itemSelected"
       className={classnames("itemSelected__container", {
-        itemSelected__open: openDelay
+        itemSelected__open: openDelay,
+        itemSelected__hide: hide
       })}
     >
       <div className="itemSelected__overlay" onClick={close}></div>
@@ -96,7 +116,7 @@ const ItemSelected = ({ location, history }) => {
             suppressContentEditableWarning={true}
             ref={titleRef}
           >
-            {item.title || null}
+            {itemSelected.title || null}
           </div>
           <div
             className="itemSelected__content"
@@ -104,9 +124,8 @@ const ItemSelected = ({ location, history }) => {
             ref={contentRef}
             suppressContentEditableWarning={true}
             data-placeholder="Tạo ghi chú..."
-            dangerouslySetInnerHTML={{ __html: item.content }}
-          >
-          </div>
+            dangerouslySetInnerHTML={{ __html: itemSelected.content }}
+          ></div>
           <div className="itemSelected__btnSubmit">
             <button type="submit">Đóng</button>
           </div>

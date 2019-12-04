@@ -7,7 +7,7 @@ import React, {
   useCallback
 } from "react";
 import Context from "../../context/Context.js";
-import { getTodoList } from "../../utils/datasource.js";
+import { getTodoList, setTodoList } from "../../utils/datasource.js";
 // import { Editor, EditorState, RichUtils } from "draft-js";
 import styles from "./styles.module.css";
 
@@ -31,7 +31,8 @@ function Add() {
         id: todos.length > 0 ? todos[todos.length - 1].id + 1 : 0
       };
       const todosNew = { [newItem.id]: newItem, ...getTodoList() };
-      localStorage.setItem("todoList", JSON.stringify(todosNew));
+      // localStorage.setItem("todoList", JSON.stringify(todosNew));
+      setTodoList(todosNew)
       context.setTodos(todosNew);
       contentRef.current.innerText = "";
       titleRef.current.innerText = "";

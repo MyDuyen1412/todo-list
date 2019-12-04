@@ -21,6 +21,11 @@
   transition: all 0.3s ease-in-out;
 }
 
+.itemSelected__hide .itemSelected__item {
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+}
+
 .itemSelected__open .itemSelected__item {
   transform: translate(0, 0) !important;
   width: 600px !important;
@@ -39,6 +44,7 @@
     0 4px 8px 3px rgba(60, 64, 67, 0.149);
   border-radius: 8px;
   padding: 10px 15px;
+  box-sizing: border-box;
 }
 
 .itemSelected__title:empty::before,
