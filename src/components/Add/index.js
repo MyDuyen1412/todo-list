@@ -1,7 +1,14 @@
 import classnames from "classnames";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useCallback
+} from "react";
 import Context from "../../context/Context.js";
 import { getTodoList } from "../../utils/datasource.js";
+// import { Editor, EditorState, RichUtils } from "draft-js";
 import styles from "./styles.module.css";
 
 function Add() {
@@ -10,25 +17,56 @@ function Add() {
   const titleRef = useRef();
   const contentRef = useRef();
   const context = useContext(Context);
+  
 
-  const handleClickOutside = event => {
-    if (searchBox.current && !searchBox.current.contains(event.target)) {
+  const handleSubmit = useCallback(
+    event => {
+      event.preventDefault();
+      const title = titleRef.current.innerText;
+      const content = contentRef.current.innerText;
+      const todos = Object.values(getTodoList());
+      const newItem = {
+        title: title || null,
+        content: content,
+        id: todos.length > 0 ? todos[todos.length - 1].id + 1 : 0
+      };
+      const todosNew = { [newItem.id]: newItem, ...getTodoList() };
+      localStorage.setItem("todoList", JSON.stringify(todosNew));
+      context.setTodos(todosNew);
+      contentRef.current.innerText = "";
+      titleRef.current.innerText = "";
       setExpand(false);
-      // handleSubmit(event)
-    }
-    if (event.keyCode === 27) {
-      setExpand(false);
-      // handleSubmit(event)
-    }
-    
-  };
+    },
+    [context]
+  );
+
+  const handleClickOutside = useCallback(
+    event => {
+      if (event.target === document.getElementById("btn-delete")) {
+        setExpand(false);
+      } else if (
+        searchBox.current &&
+        !searchBox.current.contains(event.target)
+      ) {
+        setExpand(false);
+        // handleSubmit(event);
+      }
+
+      if (event.keyCode === 27) {
+        setExpand(false);
+        handleSubmit(event);
+      }
+    },
+    [handleSubmit]
+  );
 
   useEffect(() => {
+    const node = searchBox.current;
     document.addEventListener("mousedown", handleClickOutside);
-    document.addEventListener("keydown", handleClickOutside);
+    node.addEventListener("keydown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-      document.addEventListener("keydown", handleClickOutside);
+      node.removeEventListener("keydown", handleClickOutside);
     };
   });
 
@@ -37,24 +75,6 @@ function Add() {
       contentRef.current.focus();
     }
   }, [expand]);
-
-  const handleSubmit = event => {
-    event.preventDefault();
-    const title = titleRef.current.innerText;
-    const content = contentRef.current.innerText;
-    const todos = Object.values(getTodoList());
-    const newItem = {
-      title: title || null,
-      content: content,
-      id: todos.length > 0 ? todos[todos.length - 1].id + 1 : 0
-    };
-    const todosNew = { [newItem.id]: newItem, ...getTodoList() };
-    localStorage.setItem("todoList", JSON.stringify(todosNew));
-    context.setTodos(todosNew);
-    contentRef.current.innerText = "";
-    titleRef.current.innerText = "";
-    setExpand(false);
-  };
 
   return (
     <div className={styles.container} ref={searchBox}>

@@ -1,26 +1,40 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+  useCallback
+} from "react";
 import { List, Item } from "./styles";
 
-const ListGrid = ({ children, rowHeight = 10, colWidth = "300px", grap = 10 }) => {
+const ListGrid = ({
+  children,
+  rowHeight = 10,
+  colWidth = "300px",
+  grap = 10
+}) => {
   const [spans, setSpans] = useState([]);
   const ref = useRef();
-  const computeSpans = useCallback(() => {
+  const calcSpan = useCallback(() => {
     const spans = [];
     Array.from(ref.current.children).map(child => {
-    const childHeight = child.clientHeight
-      const span = Math.ceil(childHeight / (rowHeight+grap));
-      return spans.push(span + 1);
+      const childHeight = child.clientHeight;
+      // console.log(childHeight)
+      const span = Math.ceil(childHeight / (rowHeight + grap));
+      // child.style.height = `${span * (rowHeight + grap) - grap}px`
+
+      return spans.push(span);
     });
     setSpans(spans);
   }, [grap, rowHeight]);
 
   useEffect(() => {
-    computeSpans();
-    window.addEventListener("resize", computeSpans);
+    calcSpan();
+    window.addEventListener("resize", calcSpan);
     return () => {
-      window.removeEventListener("resize", computeSpans);
+      window.removeEventListener("resize", calcSpan);
     };
-  }, [computeSpans, children]);
+  }, [calcSpan, children]);
 
   return (
     <List ref={ref} colWidth={colWidth} rowHeight={rowHeight} grap={grap}>

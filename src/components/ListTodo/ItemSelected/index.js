@@ -3,17 +3,20 @@ import React, { useEffect, useRef, useContext } from "react";
 import Context from "../../../context/Context.js";
 import "./styles.css";
 
-const ItemSelected = ({ item, close, open, position, index }) => {
+const ItemSelected = ({ item, close, open, position }) => {
   const titleRef = useRef();
   const contentRef = useRef();
   const { todos, setTodos } = useContext(Context);
 
-  const handleClose = React.useCallback(e => {
-    // escape key
-    if (e.keyCode === 27) {
-      close();
-    }
-  }, [close]);
+  const handleClose = React.useCallback(
+    e => {
+      // escape key
+      if (e.keyCode === 27) {
+        close();
+      }
+    },
+    [close]
+  );
 
   useEffect(() => {
     document.addEventListener("keydown", handleClose);
@@ -23,31 +26,27 @@ const ItemSelected = ({ item, close, open, position, index }) => {
   });
 
   useEffect(() => {
-    if(position){
+    if (position) {
       document.querySelector(
-        `.itemSelected__container.element-${index} .itemSelected__item`
-      ).style.transform = `translate(calc(${position.x}px - 100%), calc(${position.y}px - 100px))`;
+        `.itemSelected__container .itemSelected__item`
+      ).style.transform = `translate(calc(${position.x}px - 100% - 100px), calc(${position.y}px - 100px))`;
       document.querySelector(
-        `.itemSelected__container.element-${index} .itemSelected__item`
+        `.itemSelected__container .itemSelected__item`
       ).style.width = `${position.width}px`;
       document.querySelector(
-        `.itemSelected__container.element-${index} .itemSelected__item`
+        `.itemSelected__container .itemSelected__item`
       ).style.height = `${position.height}px`;
     }
-    // document.querySelector(
-    //   `.itemSelected__container.element-${index} .itemSelected__item`
-    // ).style.transform = `translate(-434px, -10px)`;
-    
-  }, [position, index]);
+  }, [position]);
 
   useEffect(() => {
     if (item) {
       var range = document.createRange();
       var sel = window.getSelection();
       range.setStart(contentRef.current, 1);
-      range.collapse(true);
       sel.removeAllRanges();
       sel.addRange(range);
+      // console.log(range.setStart(contentRef.current, 1))
       contentRef.current.focus();
     }
   }, [item]);
@@ -64,7 +63,8 @@ const ItemSelected = ({ item, close, open, position, index }) => {
   };
   return (
     <div
-      className={classnames('itemSelected__container', `element-${index}` , {
+      id="itemSelected"
+      className={classnames("itemSelected__container", {
         itemSelected__open: open
       })}
     >
@@ -87,8 +87,9 @@ const ItemSelected = ({ item, close, open, position, index }) => {
               ref={contentRef}
               suppressContentEditableWarning={true}
               data-placeholder="Tạo ghi chú..."
+              dangerouslySetInnerHTML={{__html: item.content}}
             >
-              {item.content}
+              {/* {item.content} */}
             </div>
             <div className="itemSelected__btnSubmit">
               <button type="submit">Đóng</button>
