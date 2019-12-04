@@ -22,7 +22,6 @@ const ListGrid = ({
       // console.log(childHeight)
       const span = Math.ceil(childHeight / (rowHeight + grap));
       // child.style.height = `${span * (rowHeight + grap) - grap}px`
-
       return spans.push(span);
     });
     setSpans(spans);
@@ -35,7 +34,6 @@ const ListGrid = ({
       window.removeEventListener("resize", calcSpan);
     };
   }, [calcSpan, children]);
-
   return (
     <List ref={ref} colWidth={colWidth} rowHeight={rowHeight} grap={grap}>
       {children.map((child, i) => (

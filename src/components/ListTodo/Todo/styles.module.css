@@ -5,9 +5,7 @@
   cursor: pointer;
   height: 100%;
   box-sizing: border-box;
-  /* transform: translateX(0); */
-  /* opacity: 1;
-  transition: all 0.3s ease-in-out; */
+  transition: opacity 0.2s ease-in 0.3s;
 }
 
 .item p:first-child{
@@ -16,7 +14,6 @@
 }
 
 .hide {
-  /* transform: translateX(100px); */
   opacity: 0;
 }
 

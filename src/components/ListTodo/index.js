@@ -1,17 +1,8 @@
 import _ from "lodash";
-import queryString from "query-string";
-import React, {
-  useState,
-  useContext,
-  useEffect,
-  useRef,
-  useLayoutEffect
-} from "react";
+import React, { useContext} from "react";
 import Context from "../../context/Context.js";
-import { useHistory, useLocation } from "react-router-dom";
-import ListGrid from "../ListGrid";
+import { useHistory } from "react-router-dom";
 import Todo from "./Todo";
-import ItemSelected from "./ItemSelected";
 import {
   CSSGrid,
   measureItems,
@@ -20,21 +11,9 @@ import {
   enterExitStyle
 } from "react-stonecutter";
 
-// import {
-//   GridContextProvider,
-//   GridDropZone,
-//   GridItem,
-//   swap
-// } from "react-grid-dnd";
-
 function ListTodo() {
-  const { todos, setTodos, position } = useContext(Context);
-  const [open, setOpen] = useState(false);
-  const [itemselected, setItemSelected] = useState();
+  const { todos, setTodos, itemSelected} = useContext(Context);
   const history = useHistory();
-  const location = useLocation();
-  const { id } = queryString.parse(location.search);
-  // const [position, setPosition] = useState();
 
   const { enter, entered, exit } = enterExitStyle.foldUp;
 
@@ -48,75 +27,15 @@ function ListTodo() {
     setTodos(_.omit(todos, id));
   };
 
-  const openItem = (item) => {
-    // setPosition(position)
-    history.push(`?id=${item.id}`);
+  const openItem = item => {
+    history.push({
+      pathname: `/item/${item.id}`,
+      state: { item: item }
+    });
   };
-
-  useEffect(() => {
-    if (id) {
-      setOpen(true);
-      setItemSelected(todos[parseInt(id)]);
-    } else setOpen(false);
-  }, [id, todos]);
-
-  const handleClose = () => {
-    setOpen(false);
-    history.push("/");
-  }
-
-  // const [items, setItems] = React.useState(Object.values(todos).reverse());
-
-  // const onChange = (sourceId, sourceIndex, targetIndex, targetId) => {
-  //   const nextState = swap(items, sourceIndex, targetIndex);
-  //   setItems(nextState);
-  // };
   return (
     <>
-      <div className="listTodo">
-        <ListGrid colWidth="300px">
-          {Object.values(todos)
-            .reverse()
-            .map(item => (
-              <Todo
-                key={item.id}
-                item={item}
-                open={openItem}
-                handleDelete={handleDelete}
-                hide={open && item.id === itemselected.id}
-              />
-            ))}
-        </ListGrid>
-      </div>
-      {/* <GridContextProvider onChange={onChange}>
-        <GridDropZone
-          id="items"
-          boxesPerRow={4}
-          rowHeight={100}
-          style={{ height: "300px" }}
-        >
-          {items.map(item => (
-            <GridItem key={item.id}>
-              <div
-                style={{
-                  width: "100%",
-                  height: "100%"
-                }}
-              >
-                <Todo
-                  // key={item.id}
-                  item={item}
-                  open={openItem}
-                  handleDelete={handleDelete}
-                  hide={open && item.id === itemselected.id}
-                />
-              </div>
-            </GridItem>
-          ))}
-        </GridDropZone>
-      </GridContextProvider> */}
-      {/* <Grid
-        // columns={4}
+      <Grid
         columnWidth={300}
         gutterWidth={15}
         gutterHeight={15}
@@ -126,6 +45,7 @@ function ListTodo() {
         enter={enter}
         entered={entered}
         exit={exit}
+        style={{ margin: "0 auto" }}
       >
         {Object.values(todos)
           .reverse()
@@ -135,17 +55,11 @@ function ListTodo() {
                 item={item}
                 open={openItem}
                 handleDelete={handleDelete}
-                hide={open && item.id === itemselected.id}
+                hide={itemSelected && (item.id === itemSelected.id)}
               />
             </div>
           ))}
-      </Grid> */}
-      <ItemSelected
-        item={itemselected}
-        close={handleClose}
-        open={open}
-        position={position}
-      />
+      </Grid>
     </>
   );
 }
