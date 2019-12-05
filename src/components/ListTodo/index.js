@@ -4,24 +4,12 @@ import Context from "../../context/Context.js";
 import { useHistory } from "react-router-dom";
 import { setTodoList } from "../../utils/datasource.js";
 import Todo from "./Todo";
-import {
-  CSSGrid,
-  measureItems,
-  makeResponsive,
-  layout,
-  enterExitStyle
-} from "react-stonecutter";
+import Masonry from 'react-masonry-component';
+import styles from './styles.module.css'
 
 function ListTodo() {
   const { todos, setTodos, itemSelected } = useContext(Context);
   const history = useHistory();
-
-  const { enter, entered, exit } = enterExitStyle.foldUp;
-
-  const Grid = makeResponsive(measureItems(CSSGrid), {
-    maxWidth: 1920,
-    defaultColumns: 4
-  });
 
   const handleDelete = id => {
     setTodoList(_.omit(todos, id));
@@ -34,31 +22,19 @@ function ListTodo() {
   };
   return (
     <>
-      <Grid
-        columnWidth={300}
-        gutterWidth={15}
-        gutterHeight={15}
-        layout={layout.pinterest}
-        duration={800}
-        easing="ease-out"
-        enter={enter}
-        entered={entered}
-        exit={exit}
-        style={{ margin: "0 auto" }}
-      >
+      <Masonry className={styles.list}>
         {Object.values(todos)
           .reverse()
           .map(item => (
-            <div key={item.id} style={{ width: "300px" }}>
+            <div key={item.id} className={styles.container}>
               <Todo
                 item={item}
                 open={openItem}
                 handleDelete={handleDelete}
-                hide={itemSelected && item.id === itemSelected.id}
               />
             </div>
           ))}
-      </Grid>
+      </Masonry>
     </>
   );
 }

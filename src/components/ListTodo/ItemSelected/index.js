@@ -33,8 +33,8 @@ const ItemSelected = ({ history, match }) => {
     setOpenDelay(false);
     setHide(true);
     setTimeout(() => {
-      history.push("/");
       setItemSelected();
+      history.push("/");
     }, 300);
   }, [history, setItemSelected]);
 
@@ -63,7 +63,13 @@ const ItemSelected = ({ history, match }) => {
     if (itemSelected) {
       document.querySelector(
         `.itemSelected__container .itemSelected__item`
-      ).style.transform = `translate(calc(${position.x}px - 100% - 118px), calc(${position.y}px - 100px))`;
+      ).style.left = `${position.x}px`;
+      document.querySelector(
+        `.itemSelected__container .itemSelected__item`
+      ).style.top = `${position.y}px`;
+      document.querySelector(
+        `.itemSelected__container .itemSelected__item`
+      ).style.margin = `0`;
       document.querySelector(
         `.itemSelected__container .itemSelected__item`
       ).style.width = `${position.width}px`;
@@ -75,9 +81,12 @@ const ItemSelected = ({ history, match }) => {
 
   useEffect(() => {
     if (itemSelected) {
-      var range = document.createRange();
-      var sel = window.getSelection();
-      range.setStart(contentRef.current, 1);
+      const range = document.createRange();
+      const sel = window.getSelection();
+      const count = contentRef.current.innerHTML
+        .replace(/\n$/gm, "")
+        .split(/\n/).length;
+      range.setStart(contentRef.current, count);
       sel.removeAllRanges();
       sel.addRange(range);
       contentRef.current.focus();

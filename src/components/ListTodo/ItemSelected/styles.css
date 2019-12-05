@@ -27,18 +27,19 @@
 }
 
 .itemSelected__open .itemSelected__item {
-  transform: translate(0, 0) !important;
+  /* transform: translate(0, 0) !important;
+  width: 600px !important;
+  height: auto !important; */
+  left: 50% !important;
+  margin: 0 -300px !important;
+  top: 100px !important;
   width: 600px !important;
   height: auto !important;
 }
 
 .itemSelected__item {
   position: absolute;
-  left: 50%;
-  margin: 0 -300px;
-  right: 0;
-  top: 100px;
-  width: 600px;
+  
   background: #fff;
   box-shadow: 0 1px 3px 0 rgba(60, 64, 67, 0.302),
     0 4px 8px 3px rgba(60, 64, 67, 0.149);

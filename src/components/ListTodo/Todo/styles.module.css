@@ -5,10 +5,9 @@
   cursor: pointer;
   height: 100%;
   box-sizing: border-box;
-  transition: opacity 0.2s ease-in 0.3s;
 }
 
-.item p:first-child{
+.title{
   font-size: 16px;
   font-weight: bold;
 }
