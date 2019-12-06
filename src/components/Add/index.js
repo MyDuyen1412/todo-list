@@ -28,7 +28,8 @@ function Add() {
         const newItem = {
           title: title || null,
           content: content,
-          id: todos.length > 0 ? todos[todos.length - 1].id + 1 : 0
+          id: todos.length > 0 ? todos[todos.length - 1].id + 1 : 0,
+          pin: false
         };
         const todosNew = { [newItem.id]: newItem, ...getTodoList() };
         setTodoList(todosNew)

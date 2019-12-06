@@ -1,9 +1,14 @@
-.list {
+.container {
+  width: 350px;
+  margin: 10px;
+}
+
+.listPin, .listNotPin {
+  display: none;
   margin: 0 auto;
   width: 80%;
 }
 
-.container {
-  width: 350px;
-  margin: 10px;
+.show {
+  display: block
 }

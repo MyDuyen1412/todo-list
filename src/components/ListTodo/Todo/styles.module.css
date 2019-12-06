@@ -5,6 +5,7 @@
   cursor: pointer;
   height: 100%;
   box-sizing: border-box;
+  position: relative;
 }
 
 .title{
@@ -21,7 +22,7 @@
     0 1px 3px 1px rgba(60, 64, 67, 0.149);
 }
 
-.item:hover .btnDelete {
+.item:hover .btnDelete, .item:hover .pin {
   opacity: 1;
 }
 
@@ -36,4 +37,17 @@
   background: #fff;
   outline: none;
   cursor: pointer;
+}
+
+.pin {
+  opacity: 0;
+  position: absolute;
+  right: 20px;
+  transform: rotate(90deg);
+  transition: transform .3s ease-in-out
+}
+
+.show {
+  opacity: 1;
+  transform: rotate(0)
 }

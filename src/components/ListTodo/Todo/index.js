@@ -1,15 +1,21 @@
+import _ from "lodash";
 import classnames from "classnames";
 import React, { useRef, useContext, useLayoutEffect } from "react";
 import Context from "../../../context/Context.js";
+import pinIcon from "../../../assets/images/pin.png";
 import styles from "./styles.module.css";
 
-const Todo = ({ item, open, handleDelete }) => {
-  const ref = useRef();
+const Todo = ({ item, open, handleDelete, handlePin }) => {
+  const refBtn = useRef();
   const itemRef = useRef();
+  const pinRef = useRef();
   const { setPosition, itemSelected } = useContext(Context);
 
   const handleOpen = e => {
-    if (!ref.current.contains(e.target)) {
+    if (
+      !refBtn.current.contains(e.target) &&
+      !pinRef.current.contains(e.target)
+    ) {
       open(item);
     }
   };
@@ -27,6 +33,10 @@ const Todo = ({ item, open, handleDelete }) => {
     }
   }, [item, itemSelected, setPosition]);
 
+  const pin = item => {
+    handlePin(item)
+  };
+
   return (
     <div
       id="todo-item"
@@ -36,6 +46,13 @@ const Todo = ({ item, open, handleDelete }) => {
       onClick={e => handleOpen(e, item)}
       ref={itemRef}
     >
+      <div
+        className={classnames(styles.pin, { [styles.show]: item.pin })}
+        onClick={() => pin(item)}
+        ref={pinRef}
+      >
+        <img src={pinIcon} alt="pin" />
+      </div>
       <p className={styles.title}>{item.title}</p>
       <p
         dangerouslySetInnerHTML={{
@@ -46,7 +63,11 @@ const Todo = ({ item, open, handleDelete }) => {
         }}
       ></p>
       <div className={styles.btnDelete}>
-        <button id="btn-delete" onClick={() => handleDelete(item.id)} ref={ref}>
+        <button
+          id="btn-delete"
+          onClick={() => handleDelete(item.id)}
+          ref={refBtn}
+        >
           Xoá
         </button>
       </div>
