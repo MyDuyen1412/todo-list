@@ -4,7 +4,6 @@
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 3;
 }
 
 .itemSelected__overlay {
@@ -51,6 +50,17 @@
 .itemSelected__content {
   padding: 12px 16px;
   outline: none;
+}
+
+.itemSelected__title {
+  font-size: 16px;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+.itemSelected__content {
+  max-height: 400px;
+  overflow: scroll;
 }
 
 .itemSelected__btnSubmit {

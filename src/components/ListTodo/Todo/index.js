@@ -37,7 +37,14 @@ const Todo = ({ item, open, handleDelete }) => {
       ref={itemRef}
     >
       <p className={styles.title}>{item.title}</p>
-      <p dangerouslySetInnerHTML={{ __html: item.content }}></p>
+      <p
+        dangerouslySetInnerHTML={{
+          __html:
+            item.content.length > 1000
+              ? item.content.substring(0, 1000) + "..."
+              : item.content
+        }}
+      ></p>
       <div className={styles.btnDelete}>
         <button id="btn-delete" onClick={() => handleDelete(item.id)} ref={ref}>
           Xoá

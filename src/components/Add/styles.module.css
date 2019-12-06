@@ -53,6 +53,11 @@
   font-weight: 500;
 }
 
+.content {
+  max-height: 400px;
+  overflow: scroll;
+}
+
 
 .expand {
   display: block;

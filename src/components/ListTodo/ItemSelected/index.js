@@ -92,7 +92,6 @@ const ItemSelected = ({ history, match }) => {
     const content = contentRef.current.innerText;
     todos[itemSelected.id].title = title || null;
     todos[itemSelected.id].content = content;
-    // localStorage.setItem("todoList", JSON.stringify(todos));
     setTodoList(todos);
     setTodos(todos);
     close();
