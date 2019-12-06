@@ -1,5 +1,5 @@
 import classnames from "classnames";
-import React, { useRef, useContext, useEffect, useLayoutEffect } from "react";
+import React, { useRef, useContext, useLayoutEffect } from "react";
 import Context from "../../../context/Context.js";
 import styles from "./styles.module.css";
 

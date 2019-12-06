@@ -4,7 +4,8 @@ import React, {
   useRef,
   useContext,
   useState,
-  useCallback
+  useCallback,
+  useLayoutEffect
 } from "react";
 import Context from "../../../context/Context.js";
 import { setTodoList } from "../../../utils/datasource.js";
@@ -29,7 +30,6 @@ const ItemSelected = ({ history, match }) => {
   }, [id, setItemSelected, todos]);
 
   const close = useCallback(() => {
-    // history.push("/");
     setOpenDelay(false);
     setHide(true);
     setTimeout(() => {
@@ -52,14 +52,7 @@ const ItemSelected = ({ history, match }) => {
     setTimeout(() => setOpenDelay(true), 0);
   }, []);
 
-  useEffect(() => {
-    document.addEventListener("keydown", handleClose);
-    return () => {
-      document.removeEventListener("keydown", handleClose);
-    };
-  });
-
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (itemSelected) {
       document.querySelector(
         `.itemSelected__container .itemSelected__item`
@@ -114,6 +107,7 @@ const ItemSelected = ({ history, match }) => {
         itemSelected__open: openDelay,
         itemSelected__hide: hide
       })}
+      onKeyDown={handleClose}
     >
       <div className="itemSelected__overlay" onClick={close}></div>
       <div className="itemSelected__item">

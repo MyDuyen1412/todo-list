@@ -24,18 +24,20 @@ function Add() {
       event.preventDefault();
       const title = titleRef.current.innerText;
       const content = contentRef.current.innerText;
-      const todos = Object.values(getTodoList());
-      const newItem = {
-        title: title || null,
-        content: content,
-        id: todos.length > 0 ? todos[todos.length - 1].id + 1 : 0
-      };
-      const todosNew = { [newItem.id]: newItem, ...getTodoList() };
-      // localStorage.setItem("todoList", JSON.stringify(todosNew));
-      setTodoList(todosNew)
-      context.setTodos(todosNew);
-      contentRef.current.innerText = "";
-      titleRef.current.innerText = "";
+      if(content !== '') {
+        const todos = Object.values(getTodoList());
+        const newItem = {
+          title: title || null,
+          content: content,
+          id: todos.length > 0 ? todos[todos.length - 1].id + 1 : 0
+        };
+        const todosNew = { [newItem.id]: newItem, ...getTodoList() };
+        // localStorage.setItem("todoList", JSON.stringify(todosNew));
+        setTodoList(todosNew)
+        context.setTodos(todosNew);
+        contentRef.current.innerText = "";
+        titleRef.current.innerText = "";
+      }
       setExpand(false);
     },
     [context]

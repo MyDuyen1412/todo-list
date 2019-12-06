@@ -8,7 +8,7 @@ import Masonry from 'react-masonry-component';
 import styles from './styles.module.css'
 
 function ListTodo() {
-  const { todos, setTodos, itemSelected } = useContext(Context);
+  const { todos, setTodos } = useContext(Context);
   const history = useHistory();
 
   const handleDelete = id => {
