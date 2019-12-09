@@ -3,12 +3,19 @@
   margin: 10px;
 }
 
-.listPin, .listNotPin {
+.listPin,
+.listNotPin {
   display: none;
   margin: 0 auto;
   width: 80%;
 }
 
 .show {
-  display: block
+  display: block;
+}
+
+.title {
+  margin-left: 25px;
+  font-size: 11px;
+  font-weight: 500;
 }

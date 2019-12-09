@@ -77,3 +77,15 @@
   border: none;
   outline: none;
 }
+
+.itemSelected__pin {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  transform: rotate(90deg);
+  transition: transform .3s ease-in-out
+}
+
+.itemSelected__pin-show {
+  transform: rotate(0)
+}

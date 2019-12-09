@@ -3,7 +3,7 @@ import classnames from "classnames";
 import React, { useContext } from "react";
 import Context from "../../context/Context.js";
 import { useHistory } from "react-router-dom";
-import { setTodoList } from "../../utils/datasource.js";
+import { setTodoList, getTodoPin, getTodoNotPin } from "../../utils/datasource.js";
 import Todo from "./Todo";
 import Masonry from "react-masonry-component";
 import styles from "./styles.module.css";
@@ -33,22 +33,36 @@ function ListTodo() {
     setTodos(newTodos);
   };
 
+  // const listNotPin = getTodoNotPin()
+  // const listPin = getTodoPin()
   const listNotPin = Object.values(todos)
     .reverse()
     .filter(item => !item.pin);
   const listPin = Object.values(todos)
     .reverse()
     .filter(item => item.pin);
-  console.log(listNotPin, listPin);
 
   return (
     <>
+    {/* <Masonry className={styles.list}>
+        {Object.values(todos)
+          .reverse()
+          .map(item => (
+            <div key={item.id} className={styles.container}>
+              <Todo
+                item={item}
+                open={openItem}
+                handleDelete={handleDelete}
+              />
+            </div>
+          ))}
+      </Masonry> */}
       <div
         className={classnames(styles.listPin, {
           [styles.show]: listPin.length > 0
         })}
       >
-        <p>PINS</p>
+        <p className={styles.title}>PINNED</p>
         <Masonry className={styles.list}>
           {listPin.map(item => (
             <div key={item.id} className={styles.container}>
@@ -67,7 +81,7 @@ function ListTodo() {
           [styles.show]: listNotPin.length > 0
         })}
       >
-        {listPin.length > 0 && <p>OTHERS</p>}
+        {listPin.length > 0 && <p className={styles.title}>OTHERS</p>}
         <Masonry className={styles.list}>
           {listNotPin.map(item => (
             <div key={item.id} className={styles.container}>

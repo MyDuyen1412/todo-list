@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import Context from "../../../context/Context.js";
 import { setTodoList } from "../../../utils/datasource.js";
+import pinIcon from "../../../assets/images/pin.png";
 import "./styles.css";
 
 const ItemSelected = ({ history, match }) => {
@@ -30,13 +31,22 @@ const ItemSelected = ({ history, match }) => {
   }, [id, setItemSelected, todos]);
 
   const close = useCallback(() => {
+
+    const newTodos = {
+      ...todos,
+      [itemSelected.id] : itemSelected
+    }
+    setTodoList(newTodos);
+    setTodos(newTodos);
+
     setOpenDelay(false);
     setHide(true);
     setTimeout(() => {
       setItemSelected();
       history.push("/");
     }, 300);
-  }, [history, setItemSelected]);
+
+  }, [history, itemSelected, setItemSelected, setTodos, todos]);
 
   const handleClose = useCallback(
     e => {
@@ -97,6 +107,13 @@ const ItemSelected = ({ history, match }) => {
     close();
   };
 
+  const handlePin = () => {
+    const newTodo = {
+      ...itemSelected, pin: !itemSelected.pin
+    }
+    setItemSelected(newTodo)
+  };
+
   if (!itemSelected) return null;
 
   return (
@@ -111,6 +128,14 @@ const ItemSelected = ({ history, match }) => {
       <div className="itemSelected__overlay" onClick={close}></div>
       <div className="itemSelected__item">
         <form name="todo" id="todo" onSubmit={handleSubmit}>
+          <div
+            className={classnames("itemSelected__pin", {
+              "itemSelected__pin-show": itemSelected.pin
+            })}
+            onClick={handlePin}
+          >
+            <img src={pinIcon} alt="pin" />
+          </div>
           <div
             className="itemSelected__title"
             contentEditable="true"

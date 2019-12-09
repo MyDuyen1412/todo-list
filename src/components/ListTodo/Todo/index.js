@@ -21,7 +21,7 @@ const Todo = ({ item, open, handleDelete, handlePin }) => {
   };
 
   useLayoutEffect(() => {
-    if (itemSelected && item === itemSelected) {
+    if (itemSelected && item.id === itemSelected.id) {
       const info = itemRef.current.getBoundingClientRect();
       const position = {
         width: info.width,
