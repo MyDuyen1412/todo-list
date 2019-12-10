@@ -6,6 +6,7 @@
     "classnames": "^2.2.6",
     "draft-js": "^0.11.2",
     "lodash": "^4.17.15",
+    "muuri": "^0.8.0",
     "query-string": "^6.9.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -15,7 +16,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
     "react-stonecutter": "^0.3.10",
-    "styled-components": "^4.4.1"
+    "styled-components": "^4.4.1",
+    "web-animations-js": "^2.3.2"
   },
   "scripts": {
     "start": "react-scripts start",
