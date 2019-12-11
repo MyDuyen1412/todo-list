@@ -24,14 +24,15 @@ function Add() {
       const title = titleRef.current.innerText;
       const content = contentRef.current.innerText;
       if(content !== '') {
-        const todos = Object.values(getTodoList());
+        const todoList = getTodoList()
+        const order = todoList['order'] || []
         const newItem = {
           title: title || null,
           content: content,
-          id: todos.length > 0 ? todos[todos.length - 1].id + 1 : 0,
+          id: order.length > 0 ? Math.max(...order) + 1 : 0,
           pin: false
         };
-        const todosNew = { [newItem.id]: newItem, ...getTodoList() };
+        const todosNew = { ...todoList, [newItem.id]: newItem, order: [newItem.id, ...order]};
         setTodoList(todosNew)
         context.setTodos(todosNew);
         contentRef.current.innerText = "";

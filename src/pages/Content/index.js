@@ -5,10 +5,12 @@ import { Route } from "react-router-dom";
 import ItemSelected from "../../components/ListTodo/ItemSelected";
 
 function Content() {
+
+  
   return (
     <div>
       <Add />
-      <ListTodo />
+      <ListTodo/>
       <Route path="/item/:id" component={ItemSelected} />
     </div>
   );

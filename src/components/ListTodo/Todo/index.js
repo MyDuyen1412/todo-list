@@ -1,23 +1,46 @@
 import _ from "lodash";
 import classnames from "classnames";
 import React, { useRef, useContext, useLayoutEffect } from "react";
+import { useHistory } from "react-router-dom";
 import Context from "../../../context/Context.js";
 import pinIcon from "../../../assets/images/pin.png";
+import { SortableElement } from "react-sortable-hoc";
 import styles from "./styles.module.css";
+import { setTodoList } from "../../../utils/datasource.js";
 
-const Todo = ({ item, open, handleDelete, handlePin }) => {
+const Todo = SortableElement(({ item }) => {
   const refBtn = useRef();
   const itemRef = useRef();
   const pinRef = useRef();
-  const { setPosition, itemSelected } = useContext(Context);
+  const history = useHistory();
+  const { todos, setTodos, setPosition, itemSelected } = useContext(Context);
 
   const handleOpen = e => {
     if (
       !refBtn.current.contains(e.target) &&
       !pinRef.current.contains(e.target)
     ) {
-      open(item);
+      history.push(`/item/${item.id}`);
     }
+  };
+
+  const handleDelete = id => {
+    const list = _.omit(todos, id);
+    _.remove(list.order, (el) => el === id);
+    setTodoList(list);
+    setTodos(list);
+  };
+
+  const handlePin = item => {
+    const newTodos = {
+      ...todos,
+      [item.id]: {
+        ...item,
+        pin: !item.pin
+      }
+    };
+    setTodoList(newTodos);
+    setTodos(newTodos);
   };
 
   useLayoutEffect(() => {
@@ -33,10 +56,6 @@ const Todo = ({ item, open, handleDelete, handlePin }) => {
     }
   }, [item, itemSelected, setPosition]);
 
-  const pin = item => {
-    handlePin(item)
-  };
-
   return (
     <div
       id="todo-item"
@@ -48,7 +67,7 @@ const Todo = ({ item, open, handleDelete, handlePin }) => {
     >
       <div
         className={classnames(styles.pin, { [styles.show]: item.pin })}
-        onClick={() => pin(item)}
+        onClick={() => handlePin(item)}
         ref={pinRef}
       >
         <img src={pinIcon} alt="pin" />
@@ -73,6 +92,6 @@ const Todo = ({ item, open, handleDelete, handlePin }) => {
       </div>
     </div>
   );
-};
+});
 
 export default Todo;

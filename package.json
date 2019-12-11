@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "array-move": "^2.2.1",
     "classnames": "^2.2.6",
     "draft-js": "^0.11.2",
     "lodash": "^4.17.15",
@@ -15,6 +16,7 @@
     "react-masonry-component": "^6.2.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
+    "react-sortable-hoc": "^1.10.1",
     "react-stonecutter": "^0.3.10",
     "styled-components": "^4.4.1",
     "web-animations-js": "^2.3.2"
