@@ -26,9 +26,15 @@ const Todo = SortableElement(({ item }) => {
 
   const handleDelete = id => {
     const list = _.omit(todos, id);
-    _.remove(list.order, el => el === id);
-    setTodoList(list);
-    setTodos(list);
+    const listDelNotPin = _.filter(list.orderNotPin, el => el !== id);
+    const listDelPin = _.filter(list.orderPin, el => el !== id);
+    const listNew = {
+      ...list,
+      orderNotPin: listDelNotPin,
+      orderPin: listDelPin
+    }
+    setTodoList(listNew);
+    setTodos(listNew);
   };
 
   const handlePin = item => {
@@ -38,12 +44,12 @@ const Todo = SortableElement(({ item }) => {
         ...item,
         pin: !item.pin
       },
-      orderNotPin: todos.orderNotPin.includes(item.id)
-        ? _.remove(todos.orderNotPin, i => i !== item.id)
-        : [item.id, ...todos.orderNotPin],
-      orderPin: todos.orderNotPin.includes(item.id)
-        ? [item.id, ...todos.orderPin]
-        : _.remove(todos.orderPin, i => i !== item.id)
+      orderNotPin: item.pin
+        ? [item.id, ...todos.orderNotPin]
+        : _.filter(todos.orderNotPin, i => i !== item.id),
+      orderPin: item.pin
+        ? _.filter(todos.orderPin, i => i !== item.id)
+        : [item.id, ...todos.orderPin]
     };
     setTodoList(newTodos);
     setTodos(newTodos);

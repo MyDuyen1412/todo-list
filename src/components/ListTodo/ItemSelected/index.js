@@ -26,23 +26,23 @@ const ItemSelected = ({ history, match }) => {
   } = useContext(Context);
   const [openDelay, setOpenDelay] = useState(false);
   const [hide, setHide] = useState(false);
+  const [order, setOrder] = useState({
+    pin: todos.orderPin,
+    notPin: todos.orderNotPin
+  });
 
   useEffect(() => {
     setItemSelected(todos[parseInt(id)]);
   }, [id, setItemSelected, todos]);
 
   const close = useCallback(() => {
-
     const newTodos = {
       ...todos,
-      [itemSelected.id] : itemSelected,
-      orderNotPin: todos.orderNotPin.includes(itemSelected.id)
-        ? _.remove(todos.orderNotPin, item => item !== itemSelected.id)
-        : [itemSelected.id, ...todos.orderNotPin],
-      orderPin: todos.orderNotPin.includes(itemSelected.id)
-        ? [itemSelected.id, ...todos.orderPin]
-        : _.remove(todos.orderPin, item => item !== itemSelected.id)
+      [itemSelected.id]: itemSelected,
+      orderNotPin: order.notPin,
+      orderPin: order.pin
     };
+
     setTodoList(newTodos);
     setTodos(newTodos);
 
@@ -52,8 +52,15 @@ const ItemSelected = ({ history, match }) => {
       setItemSelected();
       history.push("/");
     }, 300);
-
-  }, [history, itemSelected, setItemSelected, setTodos, todos]);
+  }, [
+    history,
+    itemSelected,
+    order.notPin,
+    order.pin,
+    setItemSelected,
+    setTodos,
+    todos
+  ]);
 
   const handleClose = useCallback(
     e => {
@@ -116,9 +123,23 @@ const ItemSelected = ({ history, match }) => {
 
   const handlePin = () => {
     const newTodo = {
-      ...itemSelected, pin: !itemSelected.pin
-    }
-    setItemSelected(newTodo)
+      ...itemSelected,
+      pin: !itemSelected.pin
+    };
+
+    const orderNotPin = itemSelected.pin
+      ? [itemSelected.id, ...order.notPin]
+      : _.filter(order.notPin, item => item !== itemSelected.id);
+    const orderPin = itemSelected.pin
+      ? _.filter(order.pin, item => item !== itemSelected.id)
+      : [itemSelected.id, ...order.pin];
+
+    setOrder({
+      notPin: orderNotPin,
+      pin: orderPin
+    });
+
+    setItemSelected(newTodo);
   };
 
   if (!itemSelected) return null;

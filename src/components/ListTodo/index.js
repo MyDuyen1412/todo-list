@@ -29,7 +29,6 @@ const ListTodo = () => {
   };
 
   if (!todos.orderNotPin || !todos.orderPin) return null;
-
   return (
     <>
       <div
