@@ -26,7 +26,7 @@ const Todo = SortableElement(({ item }) => {
 
   const handleDelete = id => {
     const list = _.omit(todos, id);
-    _.remove(list.order, (el) => el === id);
+    _.remove(list.order, el => el === id);
     setTodoList(list);
     setTodos(list);
   };
@@ -37,7 +37,13 @@ const Todo = SortableElement(({ item }) => {
       [item.id]: {
         ...item,
         pin: !item.pin
-      }
+      },
+      orderNotPin: todos.orderNotPin.includes(item.id)
+        ? _.remove(todos.orderNotPin, i => i !== item.id)
+        : [item.id, ...todos.orderNotPin],
+      orderPin: todos.orderNotPin.includes(item.id)
+        ? [item.id, ...todos.orderPin]
+        : _.remove(todos.orderPin, i => i !== item.id)
     };
     setTodoList(newTodos);
     setTodos(newTodos);

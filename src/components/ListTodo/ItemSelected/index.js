@@ -1,3 +1,4 @@
+import _ from "lodash";
 import classnames from "classnames";
 import React, {
   useEffect,
@@ -34,8 +35,14 @@ const ItemSelected = ({ history, match }) => {
 
     const newTodos = {
       ...todos,
-      [itemSelected.id] : itemSelected
-    }
+      [itemSelected.id] : itemSelected,
+      orderNotPin: todos.orderNotPin.includes(itemSelected.id)
+        ? _.remove(todos.orderNotPin, item => item !== itemSelected.id)
+        : [itemSelected.id, ...todos.orderNotPin],
+      orderPin: todos.orderNotPin.includes(itemSelected.id)
+        ? [itemSelected.id, ...todos.orderPin]
+        : _.remove(todos.orderPin, item => item !== itemSelected.id)
+    };
     setTodoList(newTodos);
     setTodos(newTodos);
 

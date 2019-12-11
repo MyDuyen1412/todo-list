@@ -8,36 +8,52 @@ import styles from "./styles.module.css";
 
 const ListTodo = () => {
   const { todos, setTodos } = useContext(Context);
-  const onSortEnd = ({ oldIndex, newIndex }) => {
-    const newOrder = arrayMove(todos.order, oldIndex, newIndex);
-    const newTodos = { ...todos, order: newOrder };
+  const onSortEndNotPin = ({ oldIndex, newIndex }) => {
+    const newOrderNotPin = arrayMove(todos.orderNotPin, oldIndex, newIndex);
+    const newTodos = {
+      ...todos,
+      orderNotPin: newOrderNotPin
+    };
     setTodoList(newTodos);
     setTodos(newTodos);
   };
 
-  const listNotPin = todos.order.filter(item => !todos[item].pin);
-  const listPin = todos.order.filter(item => todos[item].pin);
-  if (!todos.order) return null;
+  const onSortEndPin = ({ oldIndex, newIndex }) => {
+    const newOrderPin = arrayMove(todos.orderPin, oldIndex, newIndex);
+    const newTodos = {
+      ...todos,
+      orderPin: newOrderPin
+    };
+    setTodoList(newTodos);
+    setTodos(newTodos);
+  };
+
+  if (!todos.orderNotPin || !todos.orderPin) return null;
 
   return (
     <>
       <div
         className={classnames(styles.listPin, {
-          [styles.show]: listPin.length > 0
+          [styles.show]: todos.orderPin.length > 0
         })}
       >
         <p className={styles.title}>PINNED</p>
-        <List items={listPin} onSortEnd={onSortEnd} pressDelay={10} axis="xy" />
+        <List
+          items={todos.orderPin}
+          onSortEnd={onSortEndPin}
+          pressDelay={10}
+          axis="xy"
+        />
       </div>
       <div
         className={classnames(styles.listNotPin, {
-          [styles.show]: listNotPin.length > 0
+          [styles.show]: todos.orderNotPin.length > 0
         })}
       >
-        {listPin.length > 0 && <p className={styles.title}>OTHERS</p>}
+        {todos.orderPin.length > 0 && <p className={styles.title}>OTHERS</p>}
         <List
-          items={listNotPin}
-          onSortEnd={onSortEnd}
+          items={todos.orderNotPin}
+          onSortEnd={onSortEndNotPin}
           pressDelay={10}
           axis="xy"
         />

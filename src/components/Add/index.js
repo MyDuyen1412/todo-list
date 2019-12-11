@@ -16,24 +16,30 @@ function Add() {
   const titleRef = useRef();
   const contentRef = useRef();
   const context = useContext(Context);
-  
 
   const handleSubmit = useCallback(
     event => {
       event.preventDefault();
       const title = titleRef.current.innerText;
       const content = contentRef.current.innerText;
-      if(content !== '') {
-        const todoList = getTodoList()
-        const order = todoList['order'] || []
+      if (content !== "") {
+        const todoList = getTodoList();
+        const orderNotPin = todoList["orderNotPin"] || [];
+        const orderPin = todoList["orderPin"] || [];
+        const order = [...orderNotPin, ...orderPin];
         const newItem = {
           title: title || null,
           content: content,
           id: order.length > 0 ? Math.max(...order) + 1 : 0,
           pin: false
         };
-        const todosNew = { ...todoList, [newItem.id]: newItem, order: [newItem.id, ...order]};
-        setTodoList(todosNew)
+        const todosNew = {
+          ...todoList,
+          [newItem.id]: newItem,
+          orderNotPin: [newItem.id, ...orderNotPin],
+          orderPin: [...orderPin]
+        };
+        setTodoList(todosNew);
         context.setTodos(todosNew);
         contentRef.current.innerText = "";
         titleRef.current.innerText = "";
