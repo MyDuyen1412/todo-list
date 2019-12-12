@@ -6,7 +6,6 @@ import Context from "../../../context/Context.js";
 import pinIcon from "../../../assets/images/pin.png";
 import { SortableElement } from "react-sortable-hoc";
 import styles from "./styles.module.css";
-import { setTodoList } from "../../../utils/datasource.js";
 
 const Todo = SortableElement(({ item }) => {
   const refBtn = useRef();
@@ -24,34 +23,53 @@ const Todo = SortableElement(({ item }) => {
     }
   };
 
-  const handleDelete = id => {
-    const list = _.omit(todos, id);
-    const listDelNotPin = _.filter(list.orderNotPin, el => el !== id);
-    const listDelPin = _.filter(list.orderPin, el => el !== id);
+  const handleDelete = item => {
+    const list = _.omit(todos, item.id);
+    // const listDelNotPin = _.filter(list.orderNotPin, el => el !== id);
+    // const listDelPin = _.filter(list.orderPin, el => el !== id);
+    const listDelNotPin = item.pin
+      ? list.orderNotPin
+      : [
+          ...list.orderNotPin.slice(0, item.internalIndex),
+          ...list.orderNotPin.slice(
+            item.internalIndex + 1,
+            list.orderNotPin.length
+          )
+        ];
+    const listDelPin = item.pin
+      ? [
+          ...list.orderPin.slice(0, item.internalIndex),
+          ...list.orderPin.slice(item.internalIndex + 1, list.orderPin.length)
+        ]
+      : list.orderPin;
     const listNew = {
       ...list,
       orderNotPin: listDelNotPin,
       orderPin: listDelPin
-    }
-    setTodoList(listNew);
+    };
+    listDelNotPin.map((item, index) => (listNew[item].internalIndex = index));
+    listDelPin.map((item, index) => (listNew[item].internalIndex = index));
     setTodos(listNew);
   };
 
   const handlePin = item => {
+    const newOrderNotPin = item.pin
+      ? [...todos.orderNotPin, item.id]
+      : _.filter(todos.orderNotPin, i => i !== item.id);
+    const newOrderPin = item.pin
+      ? _.filter(todos.orderPin, i => i !== item.id)
+      : [...todos.orderPin, item.id];
     const newTodos = {
       ...todos,
       [item.id]: {
         ...item,
         pin: !item.pin
       },
-      orderNotPin: item.pin
-        ? [item.id, ...todos.orderNotPin]
-        : _.filter(todos.orderNotPin, i => i !== item.id),
-      orderPin: item.pin
-        ? _.filter(todos.orderPin, i => i !== item.id)
-        : [item.id, ...todos.orderPin]
+      orderNotPin: newOrderNotPin,
+      orderPin: newOrderPin
     };
-    setTodoList(newTodos);
+    newOrderNotPin.map((item, index) => (newTodos[item].internalIndex = index));
+    newOrderPin.map((item, index) => (newTodos[item].internalIndex = index));
     setTodos(newTodos);
   };
 
@@ -94,11 +112,7 @@ const Todo = SortableElement(({ item }) => {
         }}
       ></p>
       <div className={styles.btnDelete}>
-        <button
-          id="btn-delete"
-          onClick={() => handleDelete(item.id)}
-          ref={refBtn}
-        >
+        <button id="btn-delete" onClick={() => handleDelete(item)} ref={refBtn}>
           Xoá
         </button>
       </div>

@@ -9,7 +9,6 @@ import React, {
   useLayoutEffect
 } from "react";
 import Context from "../../../context/Context.js";
-import { setTodoList } from "../../../utils/datasource.js";
 import pinIcon from "../../../assets/images/pin.png";
 import "./styles.css";
 
@@ -42,8 +41,8 @@ const ItemSelected = ({ history, match }) => {
       orderNotPin: order.notPin,
       orderPin: order.pin
     };
-
-    setTodoList(newTodos);
+    order.notPin.map((item, index) => newTodos[item].internalIndex = index)
+    order.pin.map((item, index) => newTodos[item].internalIndex = index)
     setTodos(newTodos);
 
     setOpenDelay(false);
@@ -116,7 +115,6 @@ const ItemSelected = ({ history, match }) => {
     const content = contentRef.current.innerText;
     todos[itemSelected.id].title = title || null;
     todos[itemSelected.id].content = content;
-    setTodoList(todos);
     setTodos(todos);
     close();
   };
@@ -128,11 +126,11 @@ const ItemSelected = ({ history, match }) => {
     };
 
     const orderNotPin = itemSelected.pin
-      ? [itemSelected.id, ...order.notPin]
+      ? [...order.notPin,itemSelected.id]
       : _.filter(order.notPin, item => item !== itemSelected.id);
     const orderPin = itemSelected.pin
       ? _.filter(order.pin, item => item !== itemSelected.id)
-      : [itemSelected.id, ...order.pin];
+      : [...order.pin, itemSelected.id];
 
     setOrder({
       notPin: orderNotPin,

@@ -1,33 +1,42 @@
 import arrayMove from "array-move";
 import classnames from "classnames";
-import React, { useContext } from "react";
+import React, { useContext, useCallback } from "react";
 import Context from "../../context/Context.js";
-import { setTodoList } from "../../utils/datasource.js";
 import List from "./List";
 import styles from "./styles.module.css";
 
 const ListTodo = () => {
   const { todos, setTodos } = useContext(Context);
-  const onSortEndNotPin = ({ oldIndex, newIndex }) => {
-    const newOrderNotPin = arrayMove(todos.orderNotPin, oldIndex, newIndex);
+  // const onSortEndNotPin = ({ oldIndex, newIndex }) => {
+  //   const newOrderNotPin = arrayMove(todos.orderNotPin, oldIndex, newIndex);
+  //   const newTodos = {
+  //     ...todos,
+  //     orderNotPin: newOrderNotPin
+  //   };
+  //   newOrderNotPin.map((item, index) => newTodos[item].internalIndex = index)
+  //   setTodos(newTodos);
+  // };
+
+  // const onSortEndPin = ({ oldIndex, newIndex }) => {
+  //   const newOrderPin = arrayMove(todos.orderPin, oldIndex, newIndex);
+  //   const newTodos = {
+  //     ...todos,
+  //     orderPin: newOrderPin
+  //   };
+  //   newOrderPin.map((item, index) => newTodos[item].internalIndex = index)
+  //   setTodos(newTodos);
+  // };
+  const onSortEnd = useCallback((oldIndex, newIndex, order, type) => {
+    const newOrder = arrayMove(order, oldIndex, newIndex);
     const newTodos = {
       ...todos,
-      orderNotPin: newOrderNotPin
+      orderPin: type === "pin" ? newOrder : todos.orderPin,
+      orderNotPin: type === "not-pin" ? newOrder : todos.orderNotPin
     };
-    setTodoList(newTodos);
+    newOrder.map((item, index) => (newTodos[item].internalIndex = index));
     setTodos(newTodos);
-  };
-
-  const onSortEndPin = ({ oldIndex, newIndex }) => {
-    const newOrderPin = arrayMove(todos.orderPin, oldIndex, newIndex);
-    const newTodos = {
-      ...todos,
-      orderPin: newOrderPin
-    };
-    setTodoList(newTodos);
-    setTodos(newTodos);
-  };
-
+  }, [setTodos, todos]);
+  
   if (!todos.orderNotPin || !todos.orderPin) return null;
   return (
     <>
@@ -39,7 +48,9 @@ const ListTodo = () => {
         <p className={styles.title}>PINNED</p>
         <List
           items={todos.orderPin}
-          onSortEnd={onSortEndPin}
+          onSortEnd={({ oldIndex, newIndex }) =>
+            onSortEnd(oldIndex, newIndex, todos.orderPin, "pin")
+          }
           pressDelay={10}
           axis="xy"
         />
@@ -52,7 +63,10 @@ const ListTodo = () => {
         {todos.orderPin.length > 0 && <p className={styles.title}>OTHERS</p>}
         <List
           items={todos.orderNotPin}
-          onSortEnd={onSortEndNotPin}
+          // onSortEnd={onSortEnd}
+          onSortEnd={({ oldIndex, newIndex }) =>
+            onSortEnd(oldIndex, newIndex, todos.orderNotPin, "not-pin")
+          }
           pressDelay={10}
           axis="xy"
         />
