@@ -7,25 +7,6 @@ import styles from "./styles.module.css";
 
 const ListTodo = () => {
   const { todos, setTodos } = useContext(Context);
-  // const onSortEndNotPin = ({ oldIndex, newIndex }) => {
-  //   const newOrderNotPin = arrayMove(todos.orderNotPin, oldIndex, newIndex);
-  //   const newTodos = {
-  //     ...todos,
-  //     orderNotPin: newOrderNotPin
-  //   };
-  //   newOrderNotPin.map((item, index) => newTodos[item].internalIndex = index)
-  //   setTodos(newTodos);
-  // };
-
-  // const onSortEndPin = ({ oldIndex, newIndex }) => {
-  //   const newOrderPin = arrayMove(todos.orderPin, oldIndex, newIndex);
-  //   const newTodos = {
-  //     ...todos,
-  //     orderPin: newOrderPin
-  //   };
-  //   newOrderPin.map((item, index) => newTodos[item].internalIndex = index)
-  //   setTodos(newTodos);
-  // };
   const onSortEnd = useCallback((oldIndex, newIndex, order, type) => {
     const newOrder = arrayMove(order, oldIndex, newIndex);
     const newTodos = {
@@ -36,7 +17,7 @@ const ListTodo = () => {
     newOrder.map((item, index) => (newTodos[item].internalIndex = index));
     setTodos(newTodos);
   }, [setTodos, todos]);
-  
+
   if (!todos.orderNotPin || !todos.orderPin) return null;
   return (
     <>
